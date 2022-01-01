@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 
 function App() {
   const date = new Date();
-  const options = {
+
+  const dateOptions = {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -12,19 +13,21 @@ function App() {
     hour12: true,
   };
 
+  const timeOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+
   const [now, setNow] = useState({
-    dateToday: date.toLocaleDateString(undefined, options),
+    dateToday: date.toLocaleDateString([], dateOptions),
     timeNow: date.toLocaleTimeString(),
   });
 
-  const [log, setLog] = useState([
-    // { date: null, in: null, out: null }
-  ]);
+  const [log, setLog] = useState([]);
 
   // updates time every second
   useEffect(() => {
     const timer = setInterval(() => {
-      const date = new Date();
       setNow({
         dateToday: date.toLocaleDateString(),
         timeNow: date.toLocaleTimeString(),
@@ -34,23 +37,21 @@ function App() {
   }, [now]);
 
   // logs IN time when clicked
-  const checkInHandler = () => {
-    let currentDate = new Date();
+  const logInHandler = () => {
     let temp = log;
     temp.push({
-      date: currentDate.toLocaleDateString(),
-      in: currentDate.toLocaleTimeString(),
+      date: date.toLocaleDateString(),
+      in: date.toLocaleTimeString([], timeOptions),
     });
     setLog(temp);
   };
 
   // logs OUT time when clicked
-  const checkOutHandler = () => {
-    let currentDate = new Date();
+  const logOutHandler = () => {
     let temp = log;
     temp.push({
-      date: currentDate.toLocaleDateString(),
-      out: currentDate.toLocaleTimeString(),
+      date: date.toLocaleDateString(),
+      out: date.toLocaleTimeString([], timeOptions),
     });
     setLog(temp);
   };
@@ -69,18 +70,18 @@ function App() {
           </p>
         </section>
         <section className="controls">
-          <button onClick={() => checkInHandler()}>Check In</button>
-          <button onClick={() => checkOutHandler()}>Check Out</button>
+          <button onClick={() => logInHandler()}>Log In</button>
+          <button onClick={() => logOutHandler()}>Log Out</button>
         </section>
-        <section className="log">
+        <br />
+        <section className="log-table">
           <table>
             <thead>
               <tr>
-                <td>#</td>
-                <td>Date</td>
-                <td>In</td>
-                <td>Out</td>
-                {/* //TODO: <td>Duration</td> */}
+                <th>#</th>
+                <th>Date</th>
+                <th>In</th>
+                <th>Out</th>
               </tr>
             </thead>
             <tbody>
